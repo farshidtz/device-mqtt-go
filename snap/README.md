@@ -30,3 +30,41 @@ The service can then be started as follows:
 ```bash
 $ sudo snap start edgex-device-mqtt.device-mqtt
 ```
+
+### Using a content interface to set device configuration
+
+The `device-config` content interface allows another snap to seed this device
+snap with both a configuration file and one or more device profiles.
+
+To use, create a new snap with a directory containing the configuration and device 
+profile files. Your snapcraft.yaml file then needs to define a slot with 
+read access to the directory you are sharing.
+
+```
+slots:
+  device-config:
+    interface: content
+    content: device-config
+    write:
+      - $SNAP/config
+```
+
+where `$SNAP/config` is configuration directory your snap is providing to 
+the device snap.
+
+Then connect the plug in the device snap to the slot in your snap,
+which will replace the configuration in the device snap. Do this with:
+
+```bash
+$ sudo snap connect edgex-device-mqtt:device-config your-snap:device-config
+```
+
+This needs to be done before the device service is started for the first time. 
+Once you have set the configuration the device service can be started and 
+it will then be configurated using the settings you provided:
+
+```bash
+$ sudo snap start edgex-device-mqtt.device-mqtt
+```
+
+**Note** - content interfaces from snaps installed from the Snap Store that have the same publisher connect automatically. For more information on snap content interfaces please refer to the snapcraft.io [Content Interface](https://snapcraft.io/docs/content-interface) documentation.
