@@ -100,12 +100,17 @@ func main() {
 	}
 
 	cli := hooks.NewSnapCtl()
-	svc := fmt.Sprintf("%s.device-mqtt", hooks.SnapInst)
 
+	// If autostart is not explicitly set, default to "no"
+	// as only example service configuration and profiles
+	// are provided by default.
 	autostart, err := cli.Config(hooks.AutostartConfig)
 	if err != nil {
 		hooks.Error(fmt.Sprintf("Reading config 'autostart' failed: %v", err))
 		os.Exit(1)
+	}
+	if autostart == "" {
+		autostart = "no"
 	}
 
 	// TODO: move profile config before autostart, if profile=default, or
@@ -113,13 +118,13 @@ func main() {
 
 	switch strings.ToLower(autostart) {
 	case "true":
+		break
 	case "yes":
 		break
-	case "":
 	case "no":
-		// disable app-service-configurable initially because it specific requires configuration
+		// disable device-mqtt initially because it specific requires configuration
 		// with a device profile that will be specific to each installation
-		err = cli.Stop(svc, true)
+		err = cli.Stop("device-mqtt", true)
 		if err != nil {
 			hooks.Error(fmt.Sprintf("Can't stop service - %v", err))
 			os.Exit(1)
