@@ -90,8 +90,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	cli := hooks.NewSnapCtl()
-
 	// If autostart is not explicitly set, default to "no"
 	// as only example service configuration and profiles
 	// are provided by default.
@@ -101,6 +99,7 @@ func main() {
 		os.Exit(1)
 	}
 	if autostart == "" {
+		hooks.Debug("edgex-device-mqtt autostart is NOT set, initializing to 'no'")
 		autostart = "no"
 	}
 
@@ -109,10 +108,13 @@ func main() {
 
 	switch strings.ToLower(autostart) {
 	case "true":
-		break
+		hooks.Debug("edgex-device-mqtt autostart is 'true'")
 	case "yes":
-		break
+		hooks.Debug("edgex-device-mqtt autostart is 'yes'")
+	case "false":
+		fallthrough
 	case "no":
+		hooks.Debug("edgex-device-mqtt autostart is false/no; stopping service")
 		// disable device-mqtt initially because it specific requires configuration
 		// with a device profile that will be specific to each installation
 		err = cli.Stop("device-mqtt", true)
