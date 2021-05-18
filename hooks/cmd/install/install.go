@@ -78,6 +78,9 @@ func main() {
 		debug = true
 	}
 
+	fmt.Println(fmt.Sprintf("edgex-device-mqtt::install: debug: %v", debug))
+	debug = true
+
 	if err = hooks.Init(debug, "edgex-device-mqtt-go"); err != nil {
 		fmt.Println(fmt.Sprintf("edgex-device-mqtt::install: initialization failure: %v", err))
 		os.Exit(1)

@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -ex
 
 EDGEX_STARTUP_DURATION=$(snapctl get startup-duration)
 
