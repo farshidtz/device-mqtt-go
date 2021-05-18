@@ -22,6 +22,12 @@ confinement: strict
 # edinburgh release is epoch 1
 epoch: 1
 
+passthrough:
+  hooks:
+    install:
+      command-chain:
+        - bin/debug.sh
+
 apps:
   device-mqtt:
     adapter: none
