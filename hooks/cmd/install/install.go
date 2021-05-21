@@ -22,9 +22,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 
-	local "github.com/canonical/device-mqtt-go/hooks"
 	hooks "github.com/canonical/edgex-snap-hooks"
 )
 
@@ -66,22 +64,9 @@ func installConfigAndProfiles() error {
 }
 
 func main() {
-	var debug = false
 	var err error
 
-	status, err := cli.Config("debug")
-	if err != nil {
-		fmt.Println(fmt.Sprintf("edgex-device-mqtt:install: can't read value of 'debug': %v", err))
-		os.Exit(1)
-	}
-	if status == "true" {
-		debug = true
-	}
-
-	fmt.Println(fmt.Sprintf("edgex-device-mqtt::install: debug: %v", debug))
-	debug = true
-
-	if err = hooks.Init(debug, "edgex-device-mqtt-go"); err != nil {
+	if err = hooks.Init(false, "edgex-device-mqtt"); err != nil {
 		fmt.Println(fmt.Sprintf("edgex-device-mqtt::install: initialization failure: %v", err))
 		os.Exit(1)
 
@@ -93,55 +78,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	// If autostart is not explicitly set, default to "no"
-	// as only example service configuration and profiles
-	// are provided by default.
-	autostart, err := cli.Config(hooks.AutostartConfig)
+	// disable the service and handle the autostart logic in the configure hook
+	// as default snap configuration is not available when the install hook runs
+	err = cli.Stop("device-mqtt", true)
 	if err != nil {
-		hooks.Error(fmt.Sprintf("Reading config 'autostart' failed: %v", err))
+		hooks.Error(fmt.Sprintf("Can't stop service - %v", err))
 		os.Exit(1)
-	}
-	if autostart == "" {
-		hooks.Debug("edgex-device-mqtt autostart is NOT set, initializing to 'no'")
-		autostart = "no"
-	}
-
-	// TODO: move profile config before autostart, if profile=default, or
-	// no configuration file exists for the profile, then ignore autostart
-
-	switch strings.ToLower(autostart) {
-	case "true":
-		hooks.Debug("edgex-device-mqtt autostart is 'true'")
-	case "yes":
-		hooks.Debug("edgex-device-mqtt autostart is 'yes'")
-	case "false":
-		fallthrough
-	case "no":
-		hooks.Debug("edgex-device-mqtt autostart is false/no; stopping service")
-		// disable device-mqtt initially because it specific requires configuration
-		// with a device profile that will be specific to each installation
-		err = cli.Stop("device-mqtt", true)
-		if err != nil {
-			hooks.Error(fmt.Sprintf("Can't stop service - %v", err))
-			os.Exit(1)
-		}
-	default:
-		hooks.Error(fmt.Sprintf("Invalid value for 'autostart' : %s", autostart))
-		os.Exit(1)
-	}
-
-	envJSON, err := cli.Config(hooks.EnvConfig)
-	if err != nil {
-		hooks.Error(fmt.Sprintf("Reading config 'env' failed: %v", err))
-		os.Exit(1)
-	}
-
-	if envJSON != "" {
-		hooks.Debug(fmt.Sprintf("edgex-device-mqtt:install: envJSON: %s", envJSON))
-		err = hooks.HandleEdgeXConfig("device-mqtt", envJSON, local.ConfToEnv)
-		if err != nil {
-			hooks.Error(fmt.Sprintf("HandleEdgeXConfig failed: %v", err))
-			os.Exit(1)
-		}
 	}
 }
