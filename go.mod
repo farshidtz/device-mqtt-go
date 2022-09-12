@@ -4,10 +4,10 @@ require (
 	github.com/eclipse/paho.mqtt.golang v1.3.5
 	github.com/edgexfoundry/device-sdk-go/v2 v2.2.0-dev.22
 	github.com/edgexfoundry/go-mod-bootstrap/v2 v2.2.0-dev.9
-	github.com/edgexfoundry/go-mod-core-contracts/v2 v2.2.0-dev.21
+	github.com/edgexfoundry/go-mod-core-contracts/v2 v2.3.0-dev.16
 	github.com/google/uuid v1.3.0
 	github.com/spf13/cast v1.4.1
-	github.com/stretchr/testify v1.7.1
+	github.com/stretchr/testify v1.8.0
 )
 
 require (
@@ -22,11 +22,11 @@ require (
 	github.com/edgexfoundry/go-mod-secrets/v2 v2.2.0-dev.5 // indirect
 	github.com/fatih/color v1.9.0 // indirect
 	github.com/fxamacker/cbor/v2 v2.4.0 // indirect
-	github.com/go-kit/log v0.2.0 // indirect
+	github.com/go-kit/log v0.2.1 // indirect
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
-	github.com/go-playground/validator/v10 v10.10.1 // indirect
+	github.com/go-playground/validator/v10 v10.11.0 // indirect
 	github.com/go-redis/redis/v7 v7.3.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
@@ -62,7 +62,7 @@ require (
 	google.golang.org/grpc v1.42.0 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/square/go-jose.v2 v2.4.1 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
 go 1.17
